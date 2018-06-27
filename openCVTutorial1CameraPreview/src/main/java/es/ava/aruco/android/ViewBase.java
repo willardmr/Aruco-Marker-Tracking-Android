@@ -38,6 +38,7 @@ public abstract class ViewBase extends SurfaceView implements SurfaceHolder.Call
         mDetectedMarkers = new Vector<Marker>();
         mBoardDetected = new Board();
         Log.i(TAG, "Instantiated new " + this.getClass());
+
     }
 
     public boolean openCamera() {
@@ -164,7 +165,7 @@ public abstract class ViewBase extends SurfaceView implements SurfaceHolder.Call
     public void run() {
         Log.i(TAG, "Starting processing thread");
         mFps.init();
-        
+
         while (true) {
             Bitmap bmp = null;
 

@@ -49,10 +49,12 @@ public class ArucoView extends ViewBase implements OnTouchListener{
     
     public ArucoView(Context context, Aruco3dActivity renderer, float markerSize, boolean showFps) {
         super(context);
-        
+
+		Log.e("Code", "HIHI");
         setOnTouchListener(this);
         mCamParam = new CameraParameters();
-        mCamParam.readFromFile(Environment.getExternalStorageDirectory().toString() + "/camCalib/camCalibData.csv");
+        //mCamParam.readFromFile(Environment.getExternalStorageDirectory().toString() + "/camCalib/camCalibData.csv");
+		mCamParam.loadConstandCalibration();
         mDetector = new MarkerDetector();
         mBDetector = new BoardDetector();
         mRenderer = renderer;

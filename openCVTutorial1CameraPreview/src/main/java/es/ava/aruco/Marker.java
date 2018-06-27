@@ -325,7 +325,10 @@ public class Marker extends MatOfPoint2f implements Comparable<Marker>{
 	
 	public void draw3dAxis(Mat frame, CameraParameters cp, Scalar color){
 		Utils.draw3dAxis(frame, cp, color, 2*ssize, Rvec, Tvec);
+	}
 
+	public void drawBox(Mat frame, CameraParameters cp, Scalar color){
+		Utils.drawBox(frame, cp, color, 2*ssize, Rvec, Tvec);
 	}
 	
 	public Object3dContainer object(){

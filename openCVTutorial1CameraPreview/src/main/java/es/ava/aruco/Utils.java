@@ -301,6 +301,30 @@ public abstract class Utils {
 		Core.putText(frame, "Y", pts.get(2), Core.FONT_HERSHEY_SIMPLEX, 2.0,  color,2);
 		Core.putText(frame, "Z", pts.get(3), Core.FONT_HERSHEY_SIMPLEX, 2.0,  color,2);
 	}
+
+	public static void drawBox(Mat frame, CameraParameters cp, Scalar color, double height, Mat Rvec, Mat Tvec){
+		MatOfPoint3f objectPoints = new MatOfPoint3f();
+		Vector<Point3> points = new Vector<Point3>();
+		points.add(new Point3(0,     0,     0));
+		points.add(new Point3(height,0,     0));
+		points.add(new Point3(0,     height,0));
+		points.add(new Point3(0,     0,     height));
+		objectPoints.fromList(points);
+
+		MatOfPoint2f imagePoints = new MatOfPoint2f();
+		Calib3d.projectPoints(objectPoints, Rvec, Tvec,
+				cp.getCameraMatrix(), cp.getDistCoeff(), imagePoints);
+		List<Point> pts = new Vector<Point>();
+		Converters.Mat_to_vector_Point(imagePoints, pts);
+
+		Core.line(frame ,pts.get(0),pts.get(1), color, 2);
+		Core.line(frame ,pts.get(0),pts.get(2), color, 2);
+		//Core.line(frame ,pts.get(0),pts.get(3), color, 2);
+
+		Core.putText(frame, "X", pts.get(1), Core.FONT_HERSHEY_SIMPLEX, 2.0,  color,2);
+		Core.putText(frame, "Y", pts.get(2), Core.FONT_HERSHEY_SIMPLEX, 2.0,  color,2);
+		//Core.putText(frame, "Z", pts.get(3), Core.FONT_HERSHEY_SIMPLEX, 2.0,  color,2);
+	}
     
 	private static void argConvGLcpara2(double[][] cparam, double width, double height, double gnear,
 			double gfar, double[] m, boolean invert) throws ExtParamException{

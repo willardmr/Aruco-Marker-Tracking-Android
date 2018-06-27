@@ -110,7 +110,7 @@ public class CameraParameters {
 //			e.printStackTrace();
 //		}
 
-    public void readFromFile(String filePath) {
+    public void readFromFile(String filePath) throws Exception {
         try {
 			//TODO use sparseArray instead of hashmap
             HashMap<Integer, Double> matricies = new HashMap<Integer, Double>();
@@ -140,5 +140,21 @@ public class CameraParameters {
                 Log.e("IOException: ", e.getMessage());
         }
     }
+
+	public void loadConstandCalibration()
+	{
+		cameraMatrix.put(0,0,	100000, 0.0,	960,
+				0.0, 100000, 540,
+				0.00000, 0.00000, 1.00000
+		);
+
+		double[] distArray =  {	0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+		};
+		distorsionMatrix.fromArray(distArray);
+	}
 }
 

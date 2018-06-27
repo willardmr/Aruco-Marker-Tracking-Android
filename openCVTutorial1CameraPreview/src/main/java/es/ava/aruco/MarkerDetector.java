@@ -1,5 +1,7 @@
 package es.ava.aruco;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -69,7 +71,7 @@ public class MarkerDetector {
 		Imgproc.findContours(thres2, contours2, hierarchy2, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 		
 		// uncomment the following line if you want the contours drawn
-//		Imgproc.drawContours(frameDebug, contours2, -1, new Scalar(255,0,0),2);
+		// Imgproc.drawContours(in, contours2, -1, new Scalar(255,0,0),2);
 		// to each contour analyze if it is a paralelepiped likely to be a marker
 		MatOfPoint2f approxCurve = new MatOfPoint2f();
 //		List<Point> approxPoints = new ArrayList<Point>();
@@ -117,6 +119,7 @@ public class MarkerDetector {
 			}
 		}// all contours processed, now we have the candidateMarkers
 		int nCandidates = candidateMarkers.size();
+
 		// sort the points in anti-clockwise order
 		for(int i=0;i<nCandidates;i++){
 			Marker marker = candidateMarkers.get(i);
@@ -135,7 +138,7 @@ public class MarkerDetector {
 			}
 		}// points sorted in anti-clockwise order
 
-		// remove the elements whose corners are to close to each other // TODO necessary?
+		//// remove the elements whose corners are to close to each other // TODO necessary?
 		Vector<Integer> tooNearCandidates = new Vector<Integer>(); // stores the indexes in the candidateMarkers
 										   // i.e [2,3,4,5] the marker 2 is too close to 3 and 4 to 5
 		for(int i=0;i<nCandidates;i++){
@@ -154,10 +157,10 @@ public class MarkerDetector {
 
 				dist+=Math.sqrt((fromPoints.get(1).x-toPoints.get(1).x)*(fromPoints.get(1).x-toPoints.get(1).x)+
 						(fromPoints.get(1).y-toPoints.get(1).y)*(fromPoints.get(1).y-toPoints.get(1).y));
-				
+
 				dist+=Math.sqrt((fromPoints.get(2).x-toPoints.get(2).x)*(fromPoints.get(2).x-toPoints.get(2).x)+
 						(fromPoints.get(2).y-toPoints.get(2).y)*(fromPoints.get(2).y-toPoints.get(2).y));
-				
+
 				dist+=Math.sqrt((fromPoints.get(3).x-toPoints.get(3).x)*(fromPoints.get(3).x-toPoints.get(3).x)+
 						(fromPoints.get(3).y-toPoints.get(3).y)*(fromPoints.get(3).y-toPoints.get(3).y));
 				dist = dist/4;
@@ -180,7 +183,7 @@ public class MarkerDetector {
 				toRemove.set(tooNearCandidates.get(i+1), 1);
 		}
 
-		// identify the markers
+		//// identify the markers
 		for(int i=0;i<nCandidates;i++){
 			if(toRemove.get(i) == 0){
 				Marker marker = candidateMarkers.get(i);
@@ -194,20 +197,20 @@ public class MarkerDetector {
 						// rotate the points of the marker so they are always in the same order no matter the camera orientation
 						Collections.rotate(marker.toList(), 4-marker.getRotations());
 
-						newMarkers.add(marker);
 
 					}
+
+					newMarkers.add(marker);
 				}
 			}
 		}
 		// TODO refine using pixel accuracy
-		
 		// now sort by id and check that each marker is only detected once
 		Collections.sort(newMarkers);
 		toRemove.clear();
 		for(int i=0;i<newMarkers.size();i++)
 			toRemove.add(0);
-		
+
 		for(int i=0;i<newMarkers.size()-1;i++){
 			if(newMarkers.get(i).id == newMarkers.get(i+1).id)
 				if(newMarkers.get(i).perimeter()<newMarkers.get(i+1).perimeter())
@@ -215,18 +218,22 @@ public class MarkerDetector {
 				else
 					toRemove.set(i+1, 1);
 		}
-		
+
 		for(int i=toRemove.size()-1;i>=0;i--)// done in inverse order in case we need to remove more than one element
 			if(toRemove.get(i) == 1)
 				newMarkers.remove(i);
-		
+
 		// detect the position of markers if desired
-		for(int i=0;i<newMarkers.size();i++){
+		for(int i=0;i<candidateMarkers.size();i++){
 			if(cp.isValid())
-				newMarkers.get(i).calculateExtrinsics(cp.getCameraMatrix(), cp.getDistCoeff(), markerSizeMeters);
+				candidateMarkers.get(i).calculateExtrinsics(cp.getCameraMatrix(), cp.getDistCoeff(), markerSizeMeters);
 		}
-		detectedMarkers.setSize(newMarkers.size());
-		Collections.copy(detectedMarkers, newMarkers);
+		Log.e("CODE", "THERE");
+        Log.e("CODE", String.valueOf(candidateMarkers.size()));
+		//detectedMarkers.setSize(newMarkers.size());
+		//Collections.copy(detectedMarkers, newMarkers);
+        detectedMarkers.setSize(candidateMarkers.size());
+        Collections.copy(detectedMarkers, candidateMarkers);
 	}
 	
     /**

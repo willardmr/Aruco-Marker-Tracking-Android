@@ -1,6 +1,10 @@
 [
     {
-        "outputFile": "C:\\Users\\josia_000\\Documents\\REU\\tutorial-1-camerapreview\\OpenCV\\build\\intermediates\\res\\merged\\androidTest\\debug\\values\\values.xml",
+        "outputFile": "/home/max/Documents/aruco/OpenCV/build/intermediates/res/merged/androidTest/debug/values/values.xml",
+        "map": []
+    },
+    {
+        "outputFile": "/home/max/Documents/aruco/C:\\Users\\josia_000\\Documents\\REU\\tutorial-1-camerapreview\\OpenCV\\build\\intermediates\\res\\merged\\androidTest\\debug\\values\\values.xml",
         "map": []
     }
 ]

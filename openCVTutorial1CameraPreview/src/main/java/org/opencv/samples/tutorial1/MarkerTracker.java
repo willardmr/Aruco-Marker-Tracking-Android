@@ -35,6 +35,19 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Vector;
 
+// Plan
+// TODO Detect specific marker numbers
+// TODO Generate cloudformation resources
+// TODO Make physical proof of concept
+// TODO Link resources to eachother
+
+// Features
+// TODO Make detection prettier
+// TODO Name resources
+// TODO Multiple resource linkage types
+// TODO Error handling (Make sure picture is good, links make sense)
+// TODO Generate nice diagram
+
 public class MarkerTracker extends Activity implements CvCameraViewListener2 {
 
     //Constants
@@ -129,19 +142,22 @@ public class MarkerTracker extends Activity implements CvCameraViewListener2 {
         //Setup required parameters for detect method
         MarkerDetector mDetector = new MarkerDetector();
         Vector<Marker> detectedMarkers = new Vector<>();
-        CameraParameters camParams = new CameraParameters();
-        camParams.readFromFile(Environment.getExternalStorageDirectory().toString() + DATA_FILEPATH);
+        CameraParameters camParams = new CameraParameters(); //        camParams.readFromFile(Environment.getExternalStorageDirectory().toString() + DATA_FILEPATH);
+        camParams.loadConstandCalibration();
 
         //Populate detectedMarkers
         mDetector.detect(rgba, detectedMarkers, camParams, MARKER_SIZE);
 
         //Draw Axis for each marker detected
+        Log.e("CODE", "HERE");
+        Log.e("CODE", String.valueOf(detectedMarkers.size()));
         if (detectedMarkers.size() != 0) {
             for (int i = 0; i < detectedMarkers.size(); i++) {
                 Marker marker = detectedMarkers.get(i);
-                detectedMarkers.get(i).draw3dAxis(rgba, camParams, new Scalar(0,0,0));
-
-                if (SHOW_MARKERID) {
+                //detectedMarkers.get(i).draw3dAxis(rgba, camParams, new Scalar(0,0,0));
+                //detectedMarkers.get(i).drawBox(rgba, camParams, new Scalar(0,0,0));
+                detectedMarkers.get(i).draw(rgba, new Scalar(38,166,91, 1.0), 5, false);
+                if (true) {
                     //Setup
                     int idValue = detectedMarkers.get(i).getMarkerId();
                     Vector<Point3> points = new Vector<>();
@@ -156,7 +172,9 @@ public class MarkerTracker extends Activity implements CvCameraViewListener2 {
                     pts = outputPoints.toList();
 
                     //Draw id number
-                    Core.putText(rgba, Integer.toString(idValue), pts.get(0), Core.FONT_HERSHEY_SIMPLEX, 2, new Scalar(0,0,1));
+                    Log.e("CODE", "DRAW");
+                    Log.e("CODE", String.valueOf(marker.getMarkerId()));
+                    Core.putText(rgba, String.valueOf(idValue), pts.get(0), Core.FONT_HERSHEY_SIMPLEX, 4, new Scalar(0,0,1));
                 }
             }
         }

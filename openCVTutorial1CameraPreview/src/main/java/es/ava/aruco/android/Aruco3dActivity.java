@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import es.ava.aruco.Board;
@@ -29,6 +30,7 @@ public abstract class Aruco3dActivity extends RendererActivity {
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
+
 		initDetectionParam();
 		super.onCreate(savedInstanceState);
 	}
